@@ -910,7 +910,7 @@ export default function App() {
           onClick={toggleAudio}
           aria-label="Toggle audio"
         >
-          <span>{audioOn ? "Sound On" : "Sound Off"}</span>
+          <span>{audioOn ? "Music On" : "Music Off"}</span>
 
           <div className="soundwave">
             <span />
