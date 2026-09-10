@@ -3260,3 +3260,547 @@ REDUCED MOTION
     touch-action: pan-y;
   }
 }
+/* =========================================================
+   SCENE 4 — MOBILE PORTRAIT ONLY
+   =========================================================
+
+   IMPORTANT:
+   - Desktop Scene 4 is NOT changed.
+   - These rules only activate at 768px and below.
+   - project-7.png remains the hackathon image.
+   - project-8.png bullet animation is disabled on touch screens.
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  /* ---------------------------------------------------------
+     SCENE 4 MOBILE SCROLL AREA
+     --------------------------------------------------------- */
+
+  .scene4-wrapper {
+    height: 300vh;
+  }
+
+  .scene4-sticky {
+    height: 100vh;
+    min-height: 100svh;
+    overflow: hidden;
+    background-position: center center;
+    background-size: cover;
+  }
+
+
+  /* ---------------------------------------------------------
+     MOBILE TITLE / DESCRIPTION
+     --------------------------------------------------------- */
+
+  .scene4-content {
+    /*
+      Completely replace the desktop positioning.
+
+      The old desktop version uses:
+        left: 50%
+        transform: translate3d(...)
+        width: min(30vw, 420px)
+
+      That does not work well on portrait phones.
+    */
+
+    left: 7% !important;
+    top: 10% !important;
+
+    width: 86% !important;
+    max-width: none !important;
+
+    transform: none !important;
+
+    z-index: 30;
+
+    text-align: left;
+
+    padding: 0 0 0 0;
+
+    pointer-events: none;
+  }
+
+  .scene4-content .eyebrow {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 10px;
+    line-height: 1.2;
+
+    letter-spacing: 3px;
+
+    white-space: nowrap;
+
+    opacity: 0.8;
+  }
+
+  .scene4-content h2 {
+    margin: 0 0 10px 0;
+
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 0.95;
+
+    letter-spacing: 1px;
+
+    white-space: nowrap;
+
+    text-shadow:
+      0 3px 18px rgba(0, 0, 0, 0.9),
+      0 0 25px rgba(0, 0, 0, 0.6);
+  }
+
+  .scene4-content p {
+    width: min(82vw, 330px);
+
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.55;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    text-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.95);
+  }
+
+
+  /* ---------------------------------------------------------
+     PROJECT CONTAINER
+     --------------------------------------------------------- */
+
+  .scene4-project-column {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: visible;
+
+    pointer-events: none;
+
+    z-index: 10;
+  }
+
+
+  /* ---------------------------------------------------------
+     ALL FOUR PROJECT-7 IMAGES
+     ---------------------------------------------------------
+
+     We intentionally use the SAME project-7.png four times,
+     because App.jsx already maps the same image to all four
+     hackathon links.
+
+     The important change is:
+       - smaller width
+       - portrait-safe positions
+       - controlled rotation
+       - no huge desktop dimensions
+     --------------------------------------------------------- */
+
+  .scene4-project-link {
+    width: 58vw !important;
+
+    max-width: 245px !important;
+    min-width: 0 !important;
+
+    pointer-events: auto;
+
+    transform-origin: center center;
+
+    /*
+      The inline desktop transform is overridden below.
+    */
+  }
+
+  .scene4-project-image {
+    display: block;
+
+    width: 100% !important;
+    height: auto !important;
+
+    max-width: 100% !important;
+
+    border-radius: 0;
+
+    box-shadow:
+      0 18px 35px rgba(0, 0, 0, 0.55);
+
+    /*
+      Mobile doesn't need the desktop hover zoom.
+    */
+    transition: none !important;
+  }
+
+
+  /* ---------------------------------------------------------
+     PROJECT 1
+     ---------------------------------------------------------
+
+     Upper-right
+     --------------------------------------------------------- */
+
+  /* Project 1 */
+.scene4-project-link:nth-child(1) {
+  left: 46% !important;
+  top: 20% !important;
+  transform: rotate(-12deg) !important;
+}
+
+.scene4-project-link:nth-child(1) .scene4-project-image {
+  transform: scaleX(-1) !important;
+}
+
+
+  /* ---------------------------------------------------------
+     PROJECT 2
+
+     Middle-left
+     --------------------------------------------------------- */
+
+  .scene4-project-link:nth-child(2) {
+    left: -4% !important;
+    top: 43% !important;
+
+    transform: rotate(-12deg) !important;
+  }
+
+
+  /* ---------------------------------------------------------
+     PROJECT 3
+
+     Lower-right
+     --------------------------------------------------------- */
+
+  /* Project 1 */
+.scene4-project-link:nth-child(3) {
+  left: 46% !important;
+  top: 60% !important;
+  transform: rotate(14deg) !important;
+}
+
+.scene4-project-link:nth-child(3) .scene4-project-image {
+  transform: scaleX(1) !important;
+}
+
+  /* ---------------------------------------------------------
+     PROJECT 4
+
+     Bottom-left
+
+     This is the one that was disappearing below the phone.
+     --------------------------------------------------------- */
+
+  .scene4-project-link:nth-child(4) {
+    left: -4% !important;
+    top: 73% !important;
+
+    transform: rotate(16deg) !important;
+  }
+
+
+  /* ---------------------------------------------------------
+     MOBILE PROJECT INFO BOXES
+     ---------------------------------------------------------
+
+     The desktop info boxes are positioned at:
+       150% / 260% / 223% / 154%
+
+     Those values intentionally place them outside the image
+     on desktop.
+
+     On mobile we bring them back inside the viewport.
+     --------------------------------------------------------- */
+
+  .scene4-project-info {
+    position: absolute;
+
+    left: 50% !important;
+    top: 50% !important;
+
+    width: 155px !important;
+    max-width: 155px !important;
+
+    padding: 12px 13px !important;
+
+    border-radius: 9px;
+
+    background: rgba(7, 5, 12, 0.86);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+      0 15px 35px rgba(0, 0, 0, 0.45);
+
+    z-index: 100;
+
+    /*
+      Do not inherit the desktop rotations.
+    */
+    transform:
+      translate(-50%, -50%)
+      translateY(15px) !important;
+
+    pointer-events: none;
+  }
+
+  .scene4-project-info h3 {
+    margin: 0 0 6px 0;
+
+    font-family: "Cinzel", serif;
+
+    font-size: 17px;
+    line-height: 1.05;
+
+    letter-spacing: 0.04em;
+
+    color: #ef81f3;
+  }
+
+  .scene4-project-info p {
+    margin: 0;
+
+    font-family: "Plus Jakarta Sans", sans-serif;
+
+    font-size: 10px;
+    line-height: 1.45;
+
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .scene4-tap-hint {
+    display: block;
+
+    margin-top: 8px;
+
+    font-size: 8px;
+
+    line-height: 1.2;
+
+    letter-spacing: 1px;
+
+    color: rgba(255, 255, 255, 0.48);
+  }
+
+
+  /* ---------------------------------------------------------
+     TAP TO REVEAL
+     --------------------------------------------------------- */
+
+  .scene4-project-link.tapped .scene4-project-info {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+      translate(-50%, -50%)
+      translateY(0) !important;
+
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease,
+      visibility 0.25s ease;
+  }
+
+
+  /* ---------------------------------------------------------
+     DISABLE DESKTOP HOVER ZOOM ON MOBILE
+     ---------------------------------------------------------
+
+     There is a later desktop rule in the stylesheet that
+     scales the image to 1.335 on hover/tap.
+
+     That is bad for portrait because the image can cover the
+     entire viewport.
+
+     Mobile gets NO zoom.
+     --------------------------------------------------------- */
+
+  .scene4-project-link:hover .scene4-project-image,
+  .scene4-project-link.tapped .scene4-project-image {
+    transform: none !important;
+  }
+
+
+  /* ---------------------------------------------------------
+     DISABLE DESKTOP HOVER INFO BEHAVIOR
+
+     Touch devices should use the existing:
+       first tap  -> reveal
+       second tap -> open link
+
+     instead of desktop hover behavior.
+     --------------------------------------------------------- */
+
+  .scene4-project-link:hover .scene4-project-info {
+    opacity: 0;
+    visibility: hidden;
+
+    transform:
+      translate(-50%, -50%)
+      translateY(15px) !important;
+  }
+
+  .scene4-project-link.tapped .scene4-project-info {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+      translate(-50%, -50%)
+      translateY(0) !important;
+  }
+
+
+  /* ---------------------------------------------------------
+     PROJECT LAYERING
+
+     Makes the four guns overlap naturally without one huge
+     card covering everything.
+     --------------------------------------------------------- */
+
+  .scene4-project-link:nth-child(1) {
+    z-index: 14;
+  }
+
+  .scene4-project-link:nth-child(2) {
+    z-index: 13;
+  }
+
+  .scene4-project-link:nth-child(3) {
+    z-index: 12;
+  }
+
+  .scene4-project-link:nth-child(4) {
+    z-index: 11;
+  }
+
+
+  /* ---------------------------------------------------------
+     MOBILE BULLET / PROJECT-8
+
+     project-8.png is the desktop "bullet fired from the gun".
+
+     There is no mouse hover on a phone, so don't waste screen
+     space or performance running the desktop bullet animation.
+
+     The project-8 asset remains untouched for desktop.
+     --------------------------------------------------------- */
+
+  .scene4-flash,
+  .scene4-trail,
+  .scene4-bullet {
+    display: none !important;
+  }
+
+
+  /* ---------------------------------------------------------
+     REMOVE DESKTOP FOCUS OUTLINE EFFECTS ON TOUCH
+     --------------------------------------------------------- */
+
+  .scene4-project-link:focus-visible {
+    outline: none !important;
+    outline-offset: 0 !important;
+  }
+
+
+  /* ---------------------------------------------------------
+     SMALL PHONES
+     --------------------------------------------------------- */
+
+  @media (max-width: 390px) {
+
+    .scene4-content {
+      left: 6% !important;
+      top: 9% !important;
+
+      width: 88% !important;
+    }
+
+    .scene4-content h2 {
+      font-size: 8.5vw;
+    }
+
+    .scene4-content p {
+      width: 84vw;
+
+      font-size: 12px;
+    }
+
+    .scene4-project-link {
+      width: 56vw !important;
+      max-width: 215px !important;
+    }
+
+    .scene4-project-link:nth-child(1) {
+      left: 44% !important;
+      top: 27% !important;
+    }
+
+    .scene4-project-link:nth-child(2) {
+      left: 0% !important;
+      top: 43% !important;
+    }
+
+    .scene4-project-link:nth-child(3) {
+      left: 44% !important;
+      top: 90% !important;
+    }
+
+    .scene4-project-link:nth-child(4) {
+      left: 1% !important;
+      top: 74% !important;
+    }
+
+    .scene4-project-info {
+      width: 145px !important;
+      max-width: 145px !important;
+
+      padding: 10px 11px !important;
+    }
+
+    .scene4-project-info h3 {
+      font-size: 15px;
+    }
+
+    .scene4-project-info p {
+      font-size: 9px;
+    }
+  }
+}
+/* =========================================================
+   SCENE 4 MOBILE — KEEP IMAGE MIRROR AFTER TAP
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  /* Project 1 */
+  .scene4-project-link:nth-child(1) .scene4-project-image,
+  .scene4-project-link:nth-child(1).tapped .scene4-project-image {
+    transform: scaleX(-1) !important;
+  }
+
+  /* Project 2 */
+  .scene4-project-link:nth-child(2) .scene4-project-image,
+  .scene4-project-link:nth-child(2).tapped .scene4-project-image {
+    transform: scaleX(1) !important;
+  }
+
+  /* Project 3 — NOT mirrored */
+  .scene4-project-link:nth-child(3) .scene4-project-image,
+  .scene4-project-link:nth-child(3).tapped .scene4-project-image {
+    transform: scaleX(-1) !important;
+  }
+
+  /* Project 4 */
+  .scene4-project-link:nth-child(4) .scene4-project-image,
+  .scene4-project-link:nth-child(4).tapped .scene4-project-image {
+    transform: scaleX(1) !important;
+  }
+}
