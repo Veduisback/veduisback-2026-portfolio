@@ -9,6 +9,11 @@ export default function SmokeEffect() {
     if (!canvas) {
       return;
     }
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+    if (isMobile) {
+      return;
+    }
 
     ("use strict");
 
@@ -784,8 +789,6 @@ export default function SmokeEffect() {
       window.removeEventListener("touchmove", handleTouchMove);
 
       window.removeEventListener("resize", resizeCanvas);
-
-      
     };
   }, []);
 

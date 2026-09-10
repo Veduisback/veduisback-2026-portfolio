@@ -3150,6 +3150,10 @@ REDUCED MOTION
    ========================================================= */
 
 @media (max-width: 768px) {
+  .global-smoke-canvas {
+    display: none !important;
+  }
+
   .custom-cursor-ring {
     display: none !important;
   }
