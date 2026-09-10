@@ -1443,8 +1443,7 @@ export default function App() {
           <h1>Let's Connect</h1>
 
           <p>
-            Available for select creative direction engagements, film
-            commissions, and design projects.
+            Available for select creative direction engagements, CS stuff, and design projects.
           </p>
         </div>
 
