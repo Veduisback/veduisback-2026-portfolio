@@ -282,6 +282,8 @@ const NAV_SECTIONS = [
   },
 ];
 
+const MOBILE_QUERY = "(max-width: 768px)";
+
 export default function App() {
   const [progress, setProgress] = useState(0);
 
@@ -313,6 +315,25 @@ export default function App() {
   });
 
   const [hoveredProject, setHoveredProject] = useState(null);
+
+  /* Whether we're on a small/touch viewport. Drives several perf-sensitive
+     behaviors: disables the FireEffect PixiJS sim, disables the mousemove
+     parallax listener, and swaps hover-to-reveal info panels for
+     tap-to-reveal. */
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia(MOBILE_QUERY).matches
+      : false,
+  );
+
+  /* Scene 3 collage: on mobile, first tap reveals the info panel for that
+     project; a second tap on the SAME (already-revealed) project lets the
+     link navigate normally. */
+  const [tappedCollage, setTappedCollage] = useState(null);
+
+  /* Scene 4 hackathon cards: same tap-to-reveal pattern, tracked
+     separately from the "shoot" animation trigger below. */
+  const [tappedScene4, setTappedScene4] = useState(null);
 
   /* Scene 4: hovering project-7 "shoots" project-8. Each hover bumps the
      counter for that project's index, which we use as a React key so the
@@ -348,10 +369,41 @@ export default function App() {
   const audioControlsTimerRef = useRef(null);
 
   /* =======================================================
-  CUSTOM CURSOR + HERO PARALLAX
+  MOBILE DETECTION
   ======================================================= */
 
   useEffect(() => {
+    const mq = window.matchMedia(MOBILE_QUERY);
+
+    const handleChange = () => setIsMobile(mq.matches);
+
+    handleChange();
+
+    if (mq.addEventListener) {
+      mq.addEventListener("change", handleChange);
+
+      return () => mq.removeEventListener("change", handleChange);
+    }
+
+    // Safari < 14 fallback
+    mq.addListener(handleChange);
+
+    return () => mq.removeListener(handleChange);
+  }, []);
+
+  /* =======================================================
+  CUSTOM CURSOR + HERO PARALLAX
+
+  Skipped entirely on mobile: touch devices don't fire mousemove
+  during normal interaction, and skipping avoids the per-event
+  getBoundingClientRect() cost on any hybrid device that does.
+  ======================================================= */
+
+  useEffect(() => {
+    if (isMobile) {
+      return undefined;
+    }
+
     const handleMouseMove = (e) => {
       setCursorPos({
         x: e.clientX,
@@ -399,7 +451,7 @@ export default function App() {
 
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
+  }, [isMobile]);
 
   /* =======================================================
   SCROLL
@@ -752,6 +804,43 @@ export default function App() {
     hoveredProject !== null ? PROJECT_INFO[hoveredProject] : null;
 
   /* =======================================================
+     SCENE 3 COLLAGE: HOVER (desktop) / TAP (mobile)
+  ======================================================= */
+
+  const handleCollageEnter = (i) => {
+    if (isMobile) {
+      return;
+    }
+
+    setHoveredProject(i);
+  };
+
+  const handleCollageLeave = () => {
+    if (isMobile) {
+      return;
+    }
+
+    setHoveredProject(null);
+  };
+
+  const handleCollageClick = (e, i) => {
+    if (!isMobile) {
+      return;
+    }
+
+    // First tap on a project reveals its info panel instead of
+    // navigating away immediately. Tapping the same, already-revealed
+    // project again lets the link open normally.
+    if (tappedCollage !== i) {
+      e.preventDefault();
+
+      setTappedCollage(i);
+
+      setHoveredProject(i);
+    }
+  };
+
+  /* =======================================================
      SCENE 4 TEXT MOVEMENT
 
      The text starts in the center and moves toward the
@@ -765,19 +854,49 @@ export default function App() {
 
   const scene4TextX = lerp(-10, 10, cinematicEase(scene4TextProgress));
 
+  const handleScene4Click = (e, i) => {
+    if (SCENE4_LINKS[i] === "#") {
+      e.preventDefault();
+
+      return;
+    }
+
+    if (!isMobile) {
+      return;
+    }
+
+    if (tappedScene4 !== i) {
+      e.preventDefault();
+
+      setTappedScene4(i);
+
+      fireScene4Project(i);
+    }
+  };
+
+  const handleScene4Enter = (i) => {
+    if (isMobile) {
+      return;
+    }
+
+    fireScene4Project(i);
+  };
+
   return (
     <div className="app">
-      <SmokeEffect />
+      {!isMobile && <SmokeEffect />}
 
-      {/* CUSTOM CURSOR */}
+      {/* CUSTOM CURSOR (desktop only, CSS also hides this under 768px) */}
 
-      <div
-        className="custom-cursor-ring"
-        style={{
-          left: `${cursorPos.x}px`,
-          top: `${cursorPos.y}px`,
-        }}
-      />
+      {!isMobile && (
+        <div
+          className="custom-cursor-ring"
+          style={{
+            left: `${cursorPos.x}px`,
+            top: `${cursorPos.y}px`,
+          }}
+        />
+      )}
 
       {/* AUDIO */}
 
@@ -1104,7 +1223,12 @@ export default function App() {
             <div className="scene3-light-shape scene3-light-shape-3" />
           </div>
 
-          <FireEffect />
+          {/* FireEffect spins up a full PixiJS app with bloom filters and
+              continuous sprite generation - too heavy for most mobile
+              GPUs, so it's skipped entirely below 768px. The CSS
+              radial-gradient overlay (.scene3-sticky::before) and the
+              flicker shapes above still carry the scene's atmosphere. */}
+          {!isMobile && <FireEffect />}
 
           <div
             className={`scene3-project-info ${activeProject ? "visible" : ""}`}
@@ -1127,7 +1251,7 @@ export default function App() {
                 <p>{activeProject.description}</p>
 
                 <span className="scene3-project-indicator">
-                  Explore Project
+                  {isMobile ? "Tap again to open" : "Explore Project"}
                 </span>
               </div>
             )}
@@ -1157,10 +1281,11 @@ export default function App() {
                   rel="noopener noreferrer"
                   className="collage-piece-link"
                   aria-label={`Open Project ${i + 1}`}
-                  onMouseEnter={() => setHoveredProject(i)}
-                  onMouseLeave={() => setHoveredProject(null)}
-                  onFocus={() => setHoveredProject(i)}
-                  onBlur={() => setHoveredProject(null)}
+                  onMouseEnter={() => handleCollageEnter(i)}
+                  onMouseLeave={handleCollageLeave}
+                  onFocus={() => handleCollageEnter(i)}
+                  onBlur={handleCollageLeave}
+                  onClick={(e) => handleCollageClick(e, i)}
                 >
                   <img
                     src={src}
@@ -1246,7 +1371,9 @@ export default function App() {
                   href={SCENE4_LINKS[i]}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="scene4-project-link"
+                  className={`scene4-project-link ${
+                    isMobile && tappedScene4 === i ? "tapped" : ""
+                  }`}
                   aria-label={`Open Hackathon Project ${i + 1}`}
                   style={{
                     left: `${x}vw`,
@@ -1255,12 +1382,8 @@ export default function App() {
                     opacity: local,
                     transform: `rotate(${rotate}deg)`,
                   }}
-                  onClick={(e) => {
-                    if (SCENE4_LINKS[i] === "#") {
-                      e.preventDefault();
-                    }
-                  }}
-                  onMouseEnter={() => fireScene4Project(i)}
+                  onClick={(e) => handleScene4Click(e, i)}
+                  onMouseEnter={() => handleScene4Enter(i)}
                 >
                   <img
                     src={img7}
@@ -1286,6 +1409,9 @@ export default function App() {
                   <div className="scene4-project-info">
                     <h3>{SCENE4_INFO[i].title}</h3>
                     <p>{SCENE4_INFO[i].body}</p>
+                    {isMobile && (
+                      <span className="scene4-tap-hint">Tap again to open</span>
+                    )}
                   </div>
                 </a>
               );

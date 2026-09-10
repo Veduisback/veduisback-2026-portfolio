@@ -1572,6 +1572,14 @@ CLICKABLE PROJECT WRAPPER
   outline-offset: 8px;
 }
 
+/* On tap-to-reveal (mobile) the currently revealed collage item gets
+   the same lift as :hover would give it on desktop. */
+.collage-piece-link.tapped {
+  scale: 1.06;
+
+  z-index: 10;
+}
+
 .collage-piece {
   display: block;
 
@@ -1762,6 +1770,19 @@ SCENE 4 IMAGE
   color: rgba(255, 255, 255, 0.78);
 }
 
+.scene4-tap-hint {
+  display: block;
+
+  margin-top: 14px;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+
+  color: rgba(255, 255, 255, 0.45);
+}
+
 .scene4-project-link:hover .scene4-project-info {
   opacity: 1;
   visibility: visible;
@@ -1769,6 +1790,17 @@ SCENE 4 IMAGE
 
   transform: translate(-50%, -50%) translateY(0);
 }
+
+/* Tap-to-reveal (mobile): same reveal as :hover, no delay so it feels
+   immediate on tap. */
+.scene4-project-link.tapped .scene4-project-info {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+
+  transform: translate(-50%, -50%) translateY(0);
+}
+
 /* Project 1 */
 .scene4-project-link:nth-child(1) .scene4-project-info {
   left: 150%;
@@ -1801,6 +1833,10 @@ SCENE 4 IMAGE
   transform: rotate(var(--rotate)) scale(1.12);
 }
 
+.scene4-project-link.tapped .scene4-project-image {
+  transform: rotate(var(--rotate)) scale(1.12);
+}
+
 /* ========================================
 SCENE 4 HOVER
 ======================================== */
@@ -1810,6 +1846,14 @@ SCENE 4 HOVER
 }
 
 .scene4-project-link:hover .scene4-project-image {
+  transform: scale(1.335);
+}
+
+.scene4-project-link.tapped {
+  z-index: 10;
+}
+
+.scene4-project-link.tapped .scene4-project-image {
   transform: scale(1.335);
 }
 
@@ -2839,6 +2883,36 @@ MOBILE SCENE 4
   border-radius: 6px;
 }
 
+/* On mobile the info panel is tap-revealed and needs to stay fully
+   on-screen instead of flying off at the same large offsets used for
+   desktop hover, so it's repositioned to sit just below each image. */
+.scene4-project-info {
+  width: 78vw;
+  padding: 18px 20px;
+}
+
+.scene4-project-link:nth-child(1) .scene4-project-info,
+.scene4-project-link:nth-child(2) .scene4-project-info,
+.scene4-project-link:nth-child(3) .scene4-project-info,
+.scene4-project-link:nth-child(4) .scene4-project-info {
+  left: 50%;
+  top: 115%;
+  transform: translate(-50%, 0);
+}
+
+.scene4-project-link.tapped .scene4-project-info {
+  transform: translate(-50%, 0);
+}
+
+.scene4-project-info h3 {
+  font-size: 22px;
+}
+
+.scene4-project-info p {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
   .audio-system {
     top: 20px;
 
@@ -2848,6 +2922,11 @@ MOBILE SCENE 4
   .audio-controller {
     padding:
       8px 14px;
+
+    /* Cheaper blur than desktop - backdrop-filter compositing is
+       expensive on mobile GPUs. */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   .audio-extra-controls {
@@ -2872,7 +2951,16 @@ MOBILE SCENE 4
         245px,
         calc(100vw - 40px)
       );
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
+
+  .scene4-project-info {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
   .nav-indicators {
     right: 16px;
 
@@ -3076,6 +3164,14 @@ MOBILE SCENE 4
     font-size: 0.5rem;
 
     letter-spacing: 2px;
+  }
+
+  /* Lighter glow than desktop - box-shadow blur radius is a paint cost
+     on every flicker frame. */
+  .scene3-light-shape {
+    box-shadow:
+      0 0 12px 2px
+      rgba(255, 255, 255, 0.2);
   }
 
   /* --------------------------------------
