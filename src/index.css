@@ -3143,3 +3143,20 @@ REDUCED MOTION
     animation: none;
   }
 }
+
+/* =========================================================
+   MOBILE
+   Keep desktop cursor and behavior unchanged
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .custom-cursor-ring {
+    display: none !important;
+  }
+
+  html,
+  body {
+    cursor: auto;
+    touch-action: pan-y;
+  }
+}
