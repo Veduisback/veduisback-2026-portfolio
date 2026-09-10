@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 // domain root, so asset URLs need that prefix in production. Locally,
 // `vite dev` should still serve from `/`.
 // Replace 'veduisback-cinematic-portfolio' below if your repo name differs.
-const REPO_NAME = 'veduisback-cinematic-portfolio'
+const REPO_NAME = 'veduisback-2026-portfolio'
 
 export default defineConfig(({ command }) => ({
   base: command === 'build' ? `/${REPO_NAME}/` : '/',
