@@ -12,6 +12,7 @@ import img4 from "../assets/img/project-4.jpg";
 import img5 from "../assets/img/project-5.jpg";
 import img6 from "../assets/img/project-6.jpg";
 import img7 from "../assets/img/project-7.png";
+import img8 from "../assets/img/project-8.png";
 
 import background1 from "../assets/img/background-1.jpg";
 import background2 from "../assets/img/background-2.jpg";
@@ -312,6 +313,19 @@ export default function App() {
   });
 
   const [hoveredProject, setHoveredProject] = useState(null);
+
+  /* Scene 4: hovering project-7 "shoots" project-8. Each hover bumps the
+     counter for that project's index, which we use as a React key so the
+     bullet/flash/trail elements remount and the CSS animation replays
+     every time, even on repeated hovers of the same image. */
+  const [scene4FireCounts, setScene4FireCounts] = useState({});
+
+  const fireScene4Project = (index) => {
+    setScene4FireCounts((prev) => ({
+      ...prev,
+      [index]: (prev[index] || 0) + 1,
+    }));
+  };
 
   const audioRef = useRef(null);
   const loadedTrackRef = useRef(null);
@@ -1246,12 +1260,28 @@ export default function App() {
                       e.preventDefault();
                     }
                   }}
+                  onMouseEnter={() => fireScene4Project(i)}
                 >
                   <img
                     src={img7}
                     alt={`Hackathon Project ${i + 1}`}
                     className="scene4-project-image"
                   />
+
+                  {scene4FireCounts[i] ? (
+                    <React.Fragment key={scene4FireCounts[i]}>
+                      <div className="scene4-flash" />
+                      <div className="scene4-trail" />
+                      <div className="scene4-bullet">
+                        <img
+                          src={img8}
+                          alt=""
+                          aria-hidden="true"
+                          className="scene4-bullet-image"
+                        />
+                      </div>
+                    </React.Fragment>
+                  ) : null}
 
                   <div className="scene4-project-info">
                     <h3>{SCENE4_INFO[i].title}</h3>

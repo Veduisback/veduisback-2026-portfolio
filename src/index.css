@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -1818,6 +1817,133 @@ SCENE 4 HOVER
   z-index: 10;
   outline: 1px solid rgba(255, 255, 255, 0.55);
   outline-offset: 8px;
+}
+
+/* ========================================
+SCENE 4 BULLET ANIMATION
+(hovering project-7 fires project-8 across the frame)
+======================================== */
+
+.scene4-flash {
+  position: absolute;
+  top: 40%;
+  left: 105%;
+  width: 22%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-30%, -50%) scale(0.2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(239, 129, 243, 0.85) 22%,
+    rgba(239, 129, 243, 0.55) 45%,
+    rgba(239, 129, 243, 0) 72%
+  );
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 5;
+  animation: scene4FlashPop 0.28s ease-out;
+}
+
+@keyframes scene4FlashPop {
+  0% {
+    opacity: 0;
+    transform: translate(-30%, -50%) scale(0.15) rotate(0deg);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-30%, -50%) scale(1.15) rotate(8deg);
+  }
+  45% {
+    opacity: 0.75;
+    transform: translate(-30%, -50%) scale(0.85) rotate(20deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-30%, -50%) scale(0.6) rotate(40deg);
+  }
+}
+
+.scene4-trail {
+  position: absolute;
+  top: 40%;
+  left: 104.5%;
+  height: 5px;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0)
+  );
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(1px);
+  z-index: 4;
+  animation: scene4TrailGrow 0.5s ease-out 0.02s forwards;
+}
+
+@keyframes scene4TrailGrow {
+  0% {
+    width: 0%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  75% {
+    width: 42%;
+    opacity: 0.5;
+  }
+  100% {
+    width: 46%;
+    opacity: 0;
+  }
+}
+
+.scene4-bullet {
+  position: absolute;
+  top: 44.5%;
+  left: 96%;
+  width: 65%;
+  transform: translate(0, -50%) scale(1);
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
+  z-index: 6;
+  animation: scene4FireBullet 0.62s cubic-bezier(0.28, 0.7, 0.35, 1) forwards;
+}
+
+.scene4-bullet-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@keyframes scene4FireBullet {
+  0% {
+    opacity: 0;
+    transform: translate(0%, -50%) scale(0.72);
+  }
+  6% {
+    opacity: 1;
+    transform: translate(4%, -50%) scale(0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(340%, -54%) scale(0.42);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene4-flash,
+  .scene4-trail,
+  .scene4-bullet {
+    animation-duration: 0.001ms !important;
+  }
 }
 
 /* ========================================
