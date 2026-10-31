@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 
 import "./index.css";
+import VScroll from "./engine/VScroll";
 
 import FireEffect from "./FireEffect";
 import SmokeEffect from "./SmokeEffect";
@@ -353,6 +354,8 @@ export default function App() {
 
   const ticking = useRef(false);
 
+  const vScrollRef = useRef(null);
+
   const sectionRefs = useRef([]);
 
   const scene1WrapperRef = useRef(null);
@@ -452,7 +455,24 @@ export default function App() {
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [isMobile]);
+  /* =======================================================
+   VSCROLL ENGINE
+======================================================= */
 
+useEffect(() => {
+  const engine = new VScroll({
+    smoothness: 0.085,
+    wheelMultiplier: 1,
+    maxDelta: 120,
+  });
+
+  vScrollRef.current = engine;
+
+  return () => {
+    engine.destroy();
+    vScrollRef.current = null;
+  };
+}, []);
   /* =======================================================
   SCROLL
   ======================================================= */
@@ -610,15 +630,12 @@ export default function App() {
   ======================================================= */
 
   const goTo = (i) => {
-    const el = sectionRefs.current[i];
+  const el = sectionRefs.current[i];
 
-    if (el) {
-      window.scrollTo({
-        top: el.offsetTop,
-        behavior: "smooth",
-      });
-    }
-  };
+  if (el && vScrollRef.current) {
+    vScrollRef.current.scrollTo(el);
+  }
+};
 
   /* =======================================================
   AUDIO
